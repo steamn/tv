@@ -1,7 +1,24 @@
 import * as React from "react";
-import { FlatList, StyleSheet, View, Text, Button, Image,TouchableOpacity   } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  SafeAreaView,
+  FlatList,
+  StyleSheet,
+  View,
+  Text,
+  Button,
+  Image,
+  StatusBar,
+  TouchableOpacity,
+} from "react-native";
+import {
+  NavigationContainer,
+  useNavigation,
+  DefaultTheme,
+  DarkTheme,
+} from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Feather } from "@expo/vector-icons";
 import { Video } from "expo-av";
 
 const GroznyStream =
@@ -10,45 +27,192 @@ const PutStream = "https://live.chechensoft.ru/tvput/tvput/playlist.m3u8";
 const VainahStream =
   "https://live.chechensoft.ru/vainahtv/ngrp:vaynahtv_all/playlist.m3u8";
 
+const DATA = [
+  {
+    key: "1",
+    title: "ЧГТРК Грозный",
+    icon: require("./assets/images/grozny-icon.png"),
+    url: "Grozny",
+  },
+  {
+    key: "2",
+    title: "ТРК Путь",
+    icon: require("./assets/images/put-icon.png"),
+    url: "Put",
+  },
+  {
+    key: "3",
+    title: "ТРК Вайнах",
+    icon: require("./assets/images/vainah-icon.png"),
+    url: "Vainah",
+  },
+  {
+    key: "4",
+    title: "ЧГТРК Грозный",
+    icon: require("./assets/images/grozny-icon.png"),
+    url: "Grozny",
+  },
+  {
+    key: "5",
+    title: "ТРК Путь",
+    icon: require("./assets/images/put-icon.png"),
+    url: "Put",
+  },
+  {
+    key: "6",
+    title: "ТРК Вайнах",
+    icon: require("./assets/images/vainah-icon.png"),
+    url: "Vainah",
+  },
+  {
+    key: "7",
+    title: "ЧГТРК Грозный",
+    icon: require("./assets/images/grozny-icon.png"),
+    url: "Grozny",
+  },
+  {
+    key: "8",
+    title: "ТРК Путь",
+    icon: require("./assets/images/put-icon.png"),
+    url: "Put",
+  },
+  {
+    key: "9",
+    title: "ТРК Вайнах",
+    icon: require("./assets/images/vainah-icon.png"),
+    url: "Vainah",
+  },
+  {
+    key: "10",
+    title: "ЧГТРК Грозный",
+    icon: require("./assets/images/grozny-icon.png"),
+    url: "Grozny",
+  },
+  {
+    key: "11",
+    title: "ТРК Путь",
+    icon: require("./assets/images/put-icon.png"),
+    url: "Put",
+  },
+  {
+    key: "12",
+    title: "ТРК Вайнах",
+    icon: require("./assets/images/vainah-icon.png"),
+    url: "Vainah",
+  },
+];
 
+const MyTheme = {
+  dark: false,
+  colors: {
+    primary: "rgb(255, 45, 85)",
+    background: "#000",
+    card: "rgb(255, 255, 255)",
+    text: "rgb(28, 28, 30)",
+    border: "rgb(199, 199, 204)",
+    notification: "rgb(255, 69, 58)",
+  },
+};
 
+const Item = ({ title, icon, url, nav }) => (
+  <View >
+    <TouchableOpacity style={styles.item} onPress={() => { { nav.navigate(url); } }} >
+      <Image style={styles.icon } source={icon} />
+      <View style={{marginLeft: 10}}>
+      <Text style={[styles.grey, styles.fs12]}>{title}</Text>
+      <Text style={ { fontSize: 16, color: "#fff", borderBottomColor: "#A97D3A", borderBottomWidth: 2,}}>Новости -  Информационная программа </Text>
+      <Text style={[styles.grey, styles.fs12]}>17:40 |  Семейные ценности (образцовая се...</Text>
+      </View>
+    </TouchableOpacity>
+  </View>
+);
 
+const HomeStack = createStackNavigator();
 
-
-
-
-
-function HomeScreen({ navigation }) {
+function HomeStackScreen() {
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Home Screen</Text>
-      <Button
-        title="ЧГТРК Грозный"
-        onPress={() => navigation.navigate("Grozny")}
+    <HomeStack.Navigator>
+      <HomeStack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          title: "Grozny+",
+          headerStyle: {
+            backgroundColor: "#232323",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }}
       />
-      <Text> _________________</Text>
-      <Button title="ТРК Путь" onPress={() => navigation.navigate("Put")} />
-      <Text> _________________</Text>
-      <Button
-        title="ТРК Vainah"
-        onPress={() => navigation.navigate("Vainah")}
-      />
-      <Image source={require("./assets/images/grozny-small-logo.png")} />
-      <FlatList
-        data={[
-          { iconUrl: "./assets/images/grozny-small-logo.png", key2: "33333", key3: "333323" },
-          { key: "Dan" },
-          { key: "Dominic" },
-          { key: "Jackson" },
 
-        ]}
-        renderItem={({ item }) => 
-      <Text style={styles.item}>{item.key} {item.key2  } {item.iconUrl}</Text>
-      
-      
-      }
+      <HomeStack.Screen
+        name="Grozny"
+        component={GroznyPage}
+        options={{ title: "ЧГТРК Грозный" }}
       />
+      <HomeStack.Screen
+        name="Put"
+        component={PutPage}
+        options={{ title: "ТРК Путь" }}
+      />
+      <HomeStack.Screen
+        name="Vainah"
+        component={VainahPage}
+        options={{ title: "Вайнах" }}
+      />
+    </HomeStack.Navigator>
+  );
+}
+function FavStackScreen() {
+  return (
+    <HomeStack.Navigator>
+      <HomeStack.Screen
+        name="Favorite"
+        component={FavoritePage}
+        options={{ title: "Favorite" }}
+      />
+    </HomeStack.Navigator>
+  );
+}
+function MoreStackScreen() {
+  return (
+    <HomeStack.Navigator>
+      <HomeStack.Screen
+        name="More"
+        component={MorePage}
+        options={{ title: "More" }}
+      />
+    </HomeStack.Navigator>
+  );
+}
+function HomeScreen({ navigation }) {
+  const renderItem = ({ item }) => (
+    <View>
+    <Item  icon={item.icon} />
     </View>
+  );
+  return (
+    <SafeAreaView>
+      <StatusBar barStyle="light-content" backgroundColor="#121212" />
+      <View>
+        <Image
+          style={styles.banner}
+          source={require("./assets/images/banner.png")}
+        />
+        <Text style={[styles.white]}>Все телеканалы</Text>
+        <View style={styles.center}>
+          <FlatList
+            showsVerticalScrollIndicator={true}
+            showsHorizontalScrollIndicator={false}
+            data={DATA}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.key}
+          />
+        </View>
+      </View>
+    </SafeAreaView>
   );
 }
 function GroznyPage({ navigation }) {
@@ -70,7 +234,6 @@ function GroznyPage({ navigation }) {
     </View>
   );
 }
-
 function PutPage({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -109,64 +272,110 @@ function VainahPage({ navigation }) {
     </View>
   );
 }
+function FavoritePage({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Text>Favorite Page</Text>
 
-const Stack = createStackNavigator();
+      <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
+      <Button title="Go back" onPress={() => navigation.goBack()} />
+    </View>
+  );
+}
+function MorePage({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Text>More Page</Text>
+
+      <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
+      <Button title="Go back" onPress={() => navigation.goBack()} />
+    </View>
+  );
+}
+const Tab = createBottomTabNavigator();
 
 function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
+    <NavigationContainer theme={MyTheme}>
+      <Tab.Navigator
+        tabBarOptions={{
+          activeTintColor: "#fff",
+          activeBackgroundColor: "#121212",
+          inactiveBackgroundColor: "#121212",
+          inactiveTintColor: "#ddd",
+        }}
+      >
+        <Tab.Screen
           name="Home"
-          component={HomeScreen}
+          component={HomeStackScreen}
           options={{
-            title: "My home",
-            headerStyle: {
-              backgroundColor: "#f4511e",
-            },
-            headerTintColor: "#fff",
-            headerTitleStyle: {
-              fontWeight: "bold",
-            },
+            tabBarLabel: "ТВ-каналы",
+            tabBarIcon: () => <Feather name="tv" color={"#A97D3A"} size={32} />,
           }}
         />
-        <Stack.Screen
-          name="Grozny"
-          component={GroznyPage}
-          options={{ title: "ЧГТРК Грозный" }}
+        <Tab.Screen
+          name="Favorite"
+          component={FavStackScreen}
+          options={{
+            tabBarIcon: () => <Feather name="heart" color={"#ddd"} size={32} />,
+          }}
         />
-        <Stack.Screen
-          name="Put"
-          component={PutPage}
-          options={{ title: "ТРК Путь" }}
+        <Tab.Screen
+          name="More"
+          component={MoreStackScreen}
+          options={{
+            tabBarIcon: () => <Feather name="menu" color={"#ddd"} size={32} />,
+          }}
         />
-        <Stack.Screen
-          name="Vainah"
-          component={VainahPage}
-          options={{ title: "Вайнах" }}
-        />
-      </Stack.Navigator>
+      </Tab.Navigator>
     </NavigationContainer>
   );
 }
 
-
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    alignItems: "center",
     paddingTop: 22,
+  },
+  center: {
+    alignItems: "center",
+  },
+  white: {
+    color: "white",
+  },
+  grey: {
+    color: "#828282",
+  },
+  fs12: {
+    fontSize: 14,
+  },
+  banner: {
+    width: "100%",
+    marginBottom: 40,
+  },
+  ItemContainer: {
+    marginLeft: 0,
+    width: "90%",
+   
+  },
+  icon: {
+    width: 64,
+    height: 64,
+    
+  },
+  list: {
+    display: "flex",
   },
   item: {
     padding: 10,
-    fontSize: 18,
-    height: 44,
+    marginVertical: 4,
+    display: "flex",
+    flexDirection: "row",
+  
+  },
+  title: {
+    fontSize: 22,
   },
 });
-
-
-
-
-
-
 
 export default App;
