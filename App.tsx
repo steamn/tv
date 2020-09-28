@@ -9,6 +9,7 @@ import {
   Image,
   StatusBar,
   TouchableOpacity,
+ 
 } from "react-native";
 import {
   NavigationContainer,
@@ -189,28 +190,27 @@ function MoreStackScreen() {
 }
 function HomeScreen({ navigation }) {
   const renderItem = ({ item }) => (
-    <View>
-    <Item  icon={item.icon} />
+    <View style={{flex:1}}>
+    <Item style={{flex:1}} title={item.title} icon={item.icon} url={item.url} nav={navigation} />
     </View>
   );
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{flex: 1}}>
       <StatusBar barStyle="light-content" backgroundColor="#121212" />
-      <View>
+      <View style={{flex: 1}}>
         <Image
           style={styles.banner}
           source={require("./assets/images/banner.png")}
         />
         <Text style={[styles.white]}>Все телеканалы</Text>
-        <View style={styles.center}>
-          <FlatList
-            showsVerticalScrollIndicator={true}
-            showsHorizontalScrollIndicator={false}
+        <View style={{flex: 1}}>
+        <FlatList style={{flex: 1}}
             data={DATA}
             renderItem={renderItem}
             keyExtractor={(item) => item.key}
           />
         </View>
+        
       </View>
     </SafeAreaView>
   );
@@ -335,7 +335,7 @@ function App() {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    paddingTop: 22,
+    paddingTop: 25,
   },
   center: {
     alignItems: "center",
