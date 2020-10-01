@@ -266,7 +266,7 @@ function GroznyPage({ navigation }) {
       />
     </View>
   );
-
+const isFocused = useIsFocused();
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text>Detail Page</Text>
@@ -297,6 +297,7 @@ function GroznyPage({ navigation }) {
   );
 }
 function PutPage({ navigation }) {
+  const isFocused = useIsFocused();
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text>Detail Page</Text>
@@ -307,7 +308,7 @@ function PutPage({ navigation }) {
         isMuted={false}
         resizeMode="contain"
         useNativeControls={true}
-        shouldPlay={true}
+        shouldPlay={isFocused}
         style={{ width: 360, height: 300 }}
       />
       <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
@@ -316,6 +317,7 @@ function PutPage({ navigation }) {
   );
 }
 function VainahPage({ navigation }) {
+  const isFocused = useIsFocused();
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text>Detail Page</Text>
@@ -326,7 +328,7 @@ function VainahPage({ navigation }) {
         isMuted={false}
         resizeMode="contain"
         useNativeControls={true}
-        shouldPlay={true}
+        shouldPlay={isFocused}
         style={{ width: "100%", height: 300 }}
       />
       <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
