@@ -9,13 +9,14 @@ import {
   Image,
   StatusBar,
   TouchableOpacity,
- 
+
 } from "react-native";
 import {
   NavigationContainer,
   useNavigation,
   DefaultTheme,
   DarkTheme,
+  useIsFocused,
 } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -116,14 +117,47 @@ const MyTheme = {
 };
 
 const Item = ({ title, icon, url, nav }) => (
-  <View >
-    <TouchableOpacity style={styles.item} onPress={() => { { nav.navigate(url); } }} >
-      <Image style={styles.icon } source={icon} />
-      <View style={{marginLeft: 10}}>
-      <Text style={[styles.grey, styles.fs12]}>{title}</Text>
-      <Text style={ { fontSize: 16, color: "#fff", borderBottomColor: "#A97D3A", borderBottomWidth: 2,}}>Новости -  Информационная программа </Text>
-      <Text style={[styles.grey, styles.fs12]}>17:40 |  Семейные ценности (образцовая се...</Text>
+  <View>
+    <TouchableOpacity
+      style={styles.item}
+      onPress={() => {
+        {
+          nav.navigate(url);
+        }
+      }}
+    >
+      <Image style={styles.icon} source={icon} />
+      <View style={{ marginLeft: 10 }}>
+        <Text style={[styles.grey, styles.fs12]}>{title}</Text>
+        <Text
+          style={{
+            fontSize: 16,
+            color: "#fff",
+            borderBottomColor: "#A97D3A",
+            borderBottomWidth: 2,
+          }}
+        >
+          Новости - Информационная программа{" "}
+        </Text>
+        <Text style={[styles.grey, styles.fs12]}>
+          17:40 | Семейные ценности (образцовая се...
+        </Text>
       </View>
+    </TouchableOpacity>
+  </View>
+);
+
+const Icons = ({ icon, url, nav }) => (
+  <View>
+    <TouchableOpacity
+      style={styles.item}
+      onPress={() => {
+        {
+          nav.navigate(url);
+        }
+      }}
+    >
+      <Image style={styles.icon} source={icon} />
     </TouchableOpacity>
   </View>
 );
@@ -190,32 +224,49 @@ function MoreStackScreen() {
 }
 function HomeScreen({ navigation }) {
   const renderItem = ({ item }) => (
-    <View style={{flex:1}}>
-    <Item style={{flex:1}} title={item.title} icon={item.icon} url={item.url} nav={navigation} />
+    <View style={{ flex: 1 }}>
+      <Item
+        style={{ flex: 1 }}
+        title={item.title}
+        icon={item.icon}
+        url={item.url}
+        nav={navigation}
+      />
     </View>
   );
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{ flex: 1 }}>
       <StatusBar barStyle="light-content" backgroundColor="#121212" />
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <Image
           style={styles.banner}
           source={require("./assets/images/banner.png")}
         />
         <Text style={[styles.white]}>Все телеканалы</Text>
-        <View style={{flex: 1}}>
-        <FlatList style={{flex: 1}}
+        <View style={{ flex: 1 }}>
+          <FlatList
+            style={{ flex: 1 }}
             data={DATA}
             renderItem={renderItem}
             keyExtractor={(item) => item.key}
           />
         </View>
-        
       </View>
     </SafeAreaView>
   );
 }
 function GroznyPage({ navigation }) {
+  const renderItem = ({ item }) => (
+    <View style={{ flex: 1 }}>
+      <Icons
+        style={{ flex: 1 }}
+        icon={item.icon}
+        url={item.url}
+        nav={navigation}
+      />
+    </View>
+  );
+
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text>Detail Page</Text>
@@ -224,13 +275,24 @@ function GroznyPage({ navigation }) {
         rate={1.0}
         volume={1.0}
         isMuted={false}
+        shouldPlay={isFocused}
         resizeMode="contain"
         useNativeControls={true}
-        shouldPlay={true}
         style={{ width: 360, height: 300 }}
       />
+  
       <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
       <Button title="Go back" onPress={() => navigation.goBack()} />
+      <FlatList
+        horizontal
+        pagingEnabled={true}
+        showsHorizontalScrollIndicator={false}
+        legacyImplementation={false}
+        data={DATA}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.key}
+        style={{ width: 360, height: "100%" }}
+      />
     </View>
   );
 }
@@ -265,7 +327,7 @@ function VainahPage({ navigation }) {
         resizeMode="contain"
         useNativeControls={true}
         shouldPlay={true}
-        style={{ width: 360, height: 300 }}
+        style={{ width: "100%", height: 300 }}
       />
       <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
       <Button title="Go back" onPress={() => navigation.goBack()} />
@@ -273,10 +335,11 @@ function VainahPage({ navigation }) {
   );
 }
 function FavoritePage({ navigation }) {
+  
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Favorite Page</Text>
-
+      <Text style={[styles.white]}>Favorite Page11211  </Text>
+      <Text style={[styles.white]}></Text>
       <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
       <Button title="Go back" onPress={() => navigation.goBack()} />
     </View>
@@ -305,6 +368,8 @@ function App() {
           inactiveTintColor: "#ddd",
         }}
       >
+ 
+
         <Tab.Screen
           name="Home"
           component={HomeStackScreen}
@@ -356,12 +421,10 @@ const styles = StyleSheet.create({
   ItemContainer: {
     marginLeft: 0,
     width: "90%",
-   
   },
   icon: {
     width: 64,
     height: 64,
-    
   },
   list: {
     display: "flex",
@@ -371,7 +434,6 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     display: "flex",
     flexDirection: "row",
-  
   },
   title: {
     fontSize: 22,
