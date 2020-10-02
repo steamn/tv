@@ -9,7 +9,6 @@ import {
   Image,
   StatusBar,
   TouchableOpacity,
-
 } from "react-native";
 import {
   NavigationContainer,
@@ -256,47 +255,52 @@ function HomeScreen({ navigation }) {
   );
 }
 function GroznyPage({ navigation }) {
+  
   const renderItem = ({ item }) => (
-    <View style={{ flex: 1 }}>
+    <View style={{ display: 'flex', borderTopColor: "#232323", borderTopWidth:2, marginTop: 10 }}>
+      <View style={{ display: 'flex', alignSelf: "center" }}>
       <Icons
-        style={{ flex: 1 }}
         icon={item.icon}
         url={item.url}
         nav={navigation}
       />
+      </View>
+      
     </View>
   );
-const isFocused = useIsFocused();
+  const isFocused = useIsFocused();
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Detail Page</Text>
-      <Video
-        source={{ uri: GroznyStream }}
-        rate={1.0}
-        volume={1.0}
-        isMuted={false}
-        shouldPlay={isFocused}
-        resizeMode="contain"
-        useNativeControls={true}
-        style={{ width: 360, height: 300 }}
-      />
-  
-      <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
-      <Button title="Go back" onPress={() => navigation.goBack()} />
-      <FlatList
-        horizontal
-        pagingEnabled={true}
-        showsHorizontalScrollIndicator={false}
-        legacyImplementation={false}
-        data={DATA}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.key}
-        style={{ width: 360, height: "100%" }}
-      />
+    <View style={{ flex: 1,  alignItems: "center",   }}>
+      <View style={{  flex: 1 }}>
+            
+         <View style={{ flex: 4, }}>
+         <Text>Detail Page</Text>
+            <Video
+              source={{ uri: GroznyStream }}
+              rate={1.0} 
+              volume={1.0}
+              isMuted={false}
+              shouldPlay={false}
+              resizeMode="contain"
+              useNativeControls={true}
+              style={{ width: 360, height: 300 }}
+            />
+         </View>
+         
+         <View style={{ flex: 1,  }}>
+         <FlatList
+            horizontal
+            data={DATA}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.key}
+            style={styles.iconsHorList}
+          />
+         </View>
+      </View>
     </View>
   );
 }
-function PutPage({ navigation }) {
+function PutPage({ navigation }) { 
   const isFocused = useIsFocused();
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -337,10 +341,9 @@ function VainahPage({ navigation }) {
   );
 }
 function FavoritePage({ navigation }) {
-  
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text style={[styles.white]}>Favorite Page11211  </Text>
+      <Text style={[styles.white]}>Favorite Page11211 </Text>
       <Text style={[styles.white]}></Text>
       <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
       <Button title="Go back" onPress={() => navigation.goBack()} />
@@ -370,8 +373,6 @@ function App() {
           inactiveTintColor: "#ddd",
         }}
       >
- 
-
         <Tab.Screen
           name="Home"
           component={HomeStackScreen}
@@ -400,6 +401,13 @@ function App() {
 }
 
 const styles = StyleSheet.create({
+  test: {
+    display: "flex",
+  },
+  iconsHorList: {
+    width: 360,
+    height: 100,
+  },
   container: {
     alignItems: "center",
     paddingTop: 25,
