@@ -24,10 +24,14 @@ import { Video } from "expo-av";
 
 const GroznyStream =
   "https://edge2-tv-ll.facecast.io/evacoder_hls_hi/UUMLQVAYVlZyH14GRENQVV0G/2/720-3.m3u8";
-const PutStream = "https://live.chechensoft.ru/tvput/tvput/playlist.m3u8";
+const PutStream = "http://dmitry-tv.my1.ru/his/itv_zabava/02/CH_KARUSEL-1.m3u8";
 const VainahStream =
   "https://live.chechensoft.ru/vainahtv/ngrp:vaynahtv_all/playlist.m3u8";
 
+
+  // Путь https://live.chechensoft.ru/tvput/tvput/playlist.m3u8
+
+  
 const DATA = [
   {
     key: "1",
@@ -49,7 +53,7 @@ const DATA = [
   },
   {
     key: "4",
-    title: "ЧГТРК Грозный",
+    title: "Карусель",
     icon: require("./assets/images/grozny-icon.png"),
     url: "Grozny",
   },
@@ -221,7 +225,9 @@ function MoreStackScreen() {
     </HomeStack.Navigator>
   );
 }
+
 function HomeScreen({ navigation }) {
+
   const renderItem = ({ item }) => (
     <View style={{ flex: 1 }}>
       <Item
@@ -254,59 +260,14 @@ function HomeScreen({ navigation }) {
     </SafeAreaView>
   );
 }
-function GroznyPage({ navigation }) {
-  
-  const renderItem = ({ item }) => (
-    <View style={{ display: 'flex', borderTopColor: "#232323", borderTopWidth:2, marginTop: 10 }}>
-      <View style={{ display: 'flex', alignSelf: "center" }}>
-      <Icons
-        icon={item.icon}
-        url={item.url}
-        nav={navigation}
-      />
-      </View>
-      
-    </View>
-  );
+
+ 
+
+const Stream = (props) => {
   const isFocused = useIsFocused();
   return (
-    <View style={{ flex: 1,  alignItems: "center",   }}>
-      <View style={{  flex: 1 }}>
-            
-         <View style={{ flex: 4, }}>
-         <Text>Detail Page</Text>
-            <Video
-              source={{ uri: GroznyStream }}
-              rate={1.0} 
-              volume={1.0}
-              isMuted={false}
-              shouldPlay={false}
-              resizeMode="contain"
-              useNativeControls={true}
-              style={{ width: 360, height: 300 }}
-            />
-         </View>
-         
-         <View style={{ flex: 1,  }}>
-         <FlatList
-            horizontal
-            data={DATA}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.key}
-            style={styles.iconsHorList}
-          />
-         </View>
-      </View>
-    </View>
-  );
-}
-function PutPage({ navigation }) { 
-  const isFocused = useIsFocused();
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Detail Page</Text>
-      <Video
-        source={{ uri: PutStream }}
+    <Video
+        source={{ uri: props.uri }}
         rate={1.0}
         volume={1.0}
         isMuted={false}
@@ -315,28 +276,81 @@ function PutPage({ navigation }) {
         shouldPlay={isFocused}
         style={{ width: 360, height: 300 }}
       />
-      <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
-      <Button title="Go back" onPress={() => navigation.goBack()} />
+  )
+}
+
+const IconsList = ({navigation}) => {
+  const renderIcon = ({ item }) => (
+    <View style={{ display: 'flex', borderTopColor: "#232323", borderTopWidth:2, marginTop: 10 }}>
+      <View style={{ display: 'flex', alignSelf: "center" }}>
+      <Icons
+        icon={item.icon}
+        url={item.url}
+        nav={navigation}
+      />
+      </View>
+    </View>
+  );
+  return (
+      <View>
+          <FlatList
+            horizontal
+            data={DATA}
+            renderItem={renderIcon}
+            keyExtractor={(item) => item.key}
+            style={styles.iconsHorList}
+          />
+      </View>
+  )
+}
+
+
+function GroznyPage({ navigation }) {
+  return (
+    <View style={{ flex: 1,  alignItems: "center",   }}>
+      <View style={{  flex: 1 }}>
+         <View style={{ flex: 4, }}>
+         <Text>Detail Page</Text>
+         <Stream uri={GroznyStream}/>
+         </View>
+         <View style={{ flex: 1,  }}>
+           <IconsList navigation={navigation}/>
+         </View>
+      </View>
     </View>
   );
 }
-function VainahPage({ navigation }) {
-  const isFocused = useIsFocused();
+
+
+
+function PutPage({ navigation }) { 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Detail Page</Text>
-      <Video
-        source={{ uri: VainahStream }}
-        rate={1.0}
-        volume={1.0}
-        isMuted={false}
-        resizeMode="contain"
-        useNativeControls={true}
-        shouldPlay={isFocused}
-        style={{ width: "100%", height: 300 }}
-      />
-      <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
-      <Button title="Go back" onPress={() => navigation.goBack()} />
+    <View style={{ flex: 1,  alignItems: "center",   }}>
+    <View style={{  flex: 1 }}>
+       <View style={{ flex: 4, }}>
+       <Text>Detail Page</Text>
+       <Stream uri={PutStream}/>
+       </View>
+       <View style={{ flex: 1,  }}>
+         <IconsList navigation={navigation}/>
+       </View>
+    </View>
+  </View>
+   
+  );
+}
+function VainahPage({ navigation }) {
+  return (
+    <View style={{ flex: 1,  alignItems: "center",   }}>
+      <View style={{  flex: 1 }}>
+         <View style={{ flex: 4, }}>
+         <Text>Detail Page</Text>
+         <Stream uri={VainahStream}/>
+         </View>
+         <View style={{ flex: 1,  }}>
+           <IconsList navigation={navigation}/>
+         </View>
+      </View>
     </View>
   );
 }
