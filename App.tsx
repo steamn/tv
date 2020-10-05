@@ -9,6 +9,7 @@ import {
   Image,
   StatusBar,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import {
   NavigationContainer,
@@ -16,6 +17,7 @@ import {
   DefaultTheme,
   DarkTheme,
   useIsFocused,
+ 
 } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -24,11 +26,11 @@ import { Video } from "expo-av";
 
 const GroznyStream =
   "https://edge2-tv-ll.facecast.io/evacoder_hls_hi/UUMLQVAYVlZyH14GRENQVV0G/2/720-3.m3u8";
-const PutStream = "http://dmitry-tv.my1.ru/his/itv_zabava/02/CH_KARUSEL-1.m3u8";
+const PutStream = "http://dmitry-tv.my1.ru/his/02/CH_NATGEOHD.m3u8";
 const VainahStream =
   "https://live.chechensoft.ru/vainahtv/ngrp:vaynahtv_all/playlist.m3u8";
 
-
+ 
   // Путь https://live.chechensoft.ru/tvput/tvput/playlist.m3u8
 
   
@@ -54,19 +56,19 @@ const DATA = [
   {
     key: "4",
     title: "Карусель",
-    icon: require("./assets/images/grozny-icon.png"),
+    icon: require("./assets/images/1tv.png"),
     url: "Grozny",
   },
   {
     key: "5",
     title: "ТРК Путь",
-    icon: require("./assets/images/put-icon.png"),
+    icon: require("./assets/images/1tv.png"),
     url: "Put",
   },
   {
     key: "6",
     title: "ТРК Вайнах",
-    icon: require("./assets/images/vainah-icon.png"),
+    icon: require("./assets/images/1tv.png"),
     url: "Vainah",
   },
   {
@@ -354,6 +356,70 @@ function VainahPage({ navigation }) {
     </View>
   );
 }
+
+
+
+
+
+ class FetchExample extends React.Component 
+
+{
+  constructor(props) {
+    super(props);
+    this.state = { isLoading: true };
+  }
+
+  componentDidMount() {
+    return fetch('https://mininform-chr.ru/movies.json')
+      .then(response => response.json())
+      .then(responseJson => {
+        this.setState(
+          {
+            isLoading: false,
+            dataSource: responseJson.movies,
+          },
+          function() {}
+        );
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+  render() {
+    if (this.state.isLoading) {
+      return (
+        <View style={{ flex: 1, padding: 20 }}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
+
+    return (
+      <View style={{ flex: 1, paddingTop: 20,  }}>
+        <FlatList
+          data={this.state.dataSource}
+          renderItem={({ item }) => (
+            <Text style={styles.white}>
+              {item.title}, {item.releaseYear}
+            </Text>
+          )}
+          keyExtractor={({ id }, index) => id}
+        />
+      </View>
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
 function FavoritePage({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -361,6 +427,11 @@ function FavoritePage({ navigation }) {
       <Text style={[styles.white]}></Text>
       <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
       <Button title="Go back" onPress={() => navigation.goBack()} />
+
+
+<FetchExample />
+
+
     </View>
   );
 }
@@ -430,7 +501,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   white: {
-    color: "white",
+    color: "#fff",
   },
   grey: {
     color: "#828282",
