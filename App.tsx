@@ -23,7 +23,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather } from "@expo/vector-icons";
 import { Video } from "expo-av";
-
+import { DATA } from "./data.jsx";
 const GroznyStream =
   "https://edge2-tv-ll.facecast.io/evacoder_hls_hi/UUMLQVAYVlZyH14GRENQVV0G/2/720-3.m3u8";
 const PutStream = "http://dmitry-tv.my1.ru/his/02/CH_NATGEOHD.m3u8";
@@ -33,81 +33,7 @@ const VainahStream =
  
   // Путь https://live.chechensoft.ru/tvput/tvput/playlist.m3u8
 
-  
-const DATA = [
-  {
-    key: "1",
-    title: "ЧГТРК Грозный",
-    icon: require("./assets/images/grozny-icon.png"),
-    url: "Grozny",
-  },
-  {
-    key: "2",
-    title: "ТРК Путь",
-    icon: require("./assets/images/put-icon.png"),
-    url: "Put",
-  },
-  {
-    key: "3",
-    title: "ТРК Вайнах",
-    icon: require("./assets/images/vainah-icon.png"),
-    url: "Vainah",
-  },
-  {
-    key: "4",
-    title: "Карусель",
-    icon: require("./assets/images/1tv.png"),
-    url: "Grozny",
-  },
-  {
-    key: "5",
-    title: "ТРК Путь",
-    icon: require("./assets/images/1tv.png"),
-    url: "Put",
-  },
-  {
-    key: "6",
-    title: "ТРК Вайнах",
-    icon: require("./assets/images/1tv.png"),
-    url: "Vainah",
-  },
-  {
-    key: "7",
-    title: "ЧГТРК Грозный",
-    icon: require("./assets/images/grozny-icon.png"),
-    url: "Grozny",
-  },
-  {
-    key: "8",
-    title: "ТРК Путь",
-    icon: require("./assets/images/put-icon.png"),
-    url: "Put",
-  },
-  {
-    key: "9",
-    title: "ТРК Вайнах",
-    icon: require("./assets/images/vainah-icon.png"),
-    url: "Vainah",
-  },
-  {
-    key: "10",
-    title: "ЧГТРК Грозный",
-    icon: require("./assets/images/grozny-icon.png"),
-    url: "Grozny",
-  },
-  {
-    key: "11",
-    title: "ТРК Путь",
-    icon: require("./assets/images/put-icon.png"),
-    url: "Put",
-  },
-  {
-    key: "12",
-    title: "ТРК Вайнах",
-    icon: require("./assets/images/vainah-icon.png"),
-    url: "Vainah",
-  },
-];
+ 
 
 const MyTheme = {
   dark: false,
@@ -227,6 +153,10 @@ function MoreStackScreen() {
     </HomeStack.Navigator>
   );
 }
+
+
+
+
 
 function HomeScreen({ navigation }) {
 
@@ -356,71 +286,55 @@ function VainahPage({ navigation }) {
     </View>
   );
 }
-
-
-
-
-
- class FetchExample extends React.Component 
-
-{
-  constructor(props) {
-    super(props);
-    this.state = { isLoading: true };
-  }
-
-  componentDidMount() {
-    return fetch('https://mininform-chr.ru/movies.json')
-      .then(response => response.json())
-      .then(responseJson => {
-        this.setState(
-          {
-            isLoading: false,
-            dataSource: responseJson.movies,
-          },
-          function() {}
-        );
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }
-
-  render() {
-    if (this.state.isLoading) {
-      return (
-        <View style={{ flex: 1, padding: 20 }}>
-          <ActivityIndicator />
-        </View>
-      );
-    }
-
-    return (
-      <View style={{ flex: 1, paddingTop: 20,  }}>
-        <FlatList
-          data={this.state.dataSource}
-          renderItem={({ item }) => (
-            <Text style={styles.white}>
-              {item.title}, {item.releaseYear}
-            </Text>
-          )}
-          keyExtractor={({ id }, index) => id}
-        />
-      </View>
-    );
-  }
-}
-
-
-
-
-
-
-
-
-
+ 
 
 function FavoritePage({ navigation }) {
+
+ 
+
+  const URI = '/data.js';
+
+const getData = async () => {
+  try {
+    let response = await fetch(URI);
+    let json = await response.json();
+    return json;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+  const ListItem = ({item}) => {
+
+    return (
+      <View>
+
+      <View style={{ flex: 1 }}>
+          <Item
+            style={{ flex: 1 }}
+            title={item.title}
+            icon={item.icon}
+            url={item.url}
+            nav={navigation}
+          />
+        </View>
+  
+        
+        <Text style={styles.white}>
+
+          {item.title},  {item.icon}  
+          
+  
+        </Text>
+
+      </View>
+    );
+  };
+
+
+  const [items, setItems] = React.useState([]);
+  getData().then(items => setItems(items));
+
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text style={[styles.white]}>Favorite Page11211 </Text>
@@ -429,9 +343,12 @@ function FavoritePage({ navigation }) {
       <Button title="Go back" onPress={() => navigation.goBack()} />
 
 
-<FetchExample />
-
-
+      <FlatList
+        data={items}
+        keyExtractor={item => item.id.toString()}
+        renderItem={({item}) => <ListItem item={item} />}
+      />
+ 
     </View>
   );
 }
