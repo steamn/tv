@@ -23,7 +23,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather } from "@expo/vector-icons";
 import { Video } from "expo-av";
-import { DATA } from "./data.jsx";
+ 
 const GroznyStream =
   "https://edge2-tv-ll.facecast.io/evacoder_hls_hi/UUMLQVAYVlZyH14GRENQVV0G/2/720-3.m3u8";
 const PutStream = "http://dmitry-tv.my1.ru/his/02/CH_NATGEOHD.m3u8";
@@ -42,71 +42,18 @@ const DATA = [
     url: "Grozny",
   },
   {
-    key: "2",
-    title: "ТРК Путь",
+    key: "12",
+    title: "ЧГТРК Грозный 2",
     icon: require("./assets/images/put-icon.png"),
-    url: "Put",
+    url: "Grozny",
   },
   {
     key: "3",
-    title: "ТРК Вайнах",
+    title: "ЧГТРК Грозный 2",
     icon: require("./assets/images/vainah-icon.png"),
-    url: "Vainah",
-  },
-  {
-    key: "4",
-    title: "Карусель",
-    icon: require("./assets/images/1tv.png"),
     url: "Grozny",
   },
-  {
-    key: "5",
-    title: "ТРК Путь",
-    icon: require("./assets/images/1tv.png"),
-    url: "Put",
-  },
-  {
-    key: "6",
-    title: "ТРК Вайнах",
-    icon: require("./assets/images/1tv.png"),
-    url: "Vainah",
-  },
-  {
-    key: "7",
-    title: "ЧГТРК Грозный",
-    icon: require("./assets/images/grozny-icon.png"),
-    url: "Grozny",
-  },
-  {
-    key: "8",
-    title: "ТРК Путь",
-    icon: require("./assets/images/put-icon.png"),
-    url: "Put",
-  },
-  {
-    key: "9",
-    title: "ТРК Вайнах",
-    icon: require("./assets/images/vainah-icon.png"),
-    url: "Vainah",
-  },
-  {
-    key: "10",
-    title: "ЧГТРК Грозный",
-    icon: require("./assets/images/grozny-icon.png"),
-    url: "Grozny",
-  },
-  {
-    key: "11",
-    title: "ТРК Путь",
-    icon: require("./assets/images/put-icon.png"),
-    url: "Put",
-  },
-  {
-    key: "12",
-    title: "ТРК Вайнах",
-    icon: require("./assets/images/vainah-icon.png"),
-    url: "Vainah",
-  },
+   
 ];
 
 const MyTheme = {
@@ -131,7 +78,7 @@ const Item = ({ title, icon, url, nav }) => (
         }
       }}
     >
-      <Image style={styles.icon} source={icon} />
+      <Image style={styles.icon} source={{uri: icon}} />
       <View style={{ marginLeft: 10 }}>
         <Text style={[styles.grey, styles.fs12]}>{title}</Text>
         <Text
@@ -234,17 +181,39 @@ function MoreStackScreen() {
 
 function HomeScreen({ navigation }) {
 
-  const renderItem = ({ item }) => (
-    <View style={{ flex: 1 }}>
-      <Item
-        style={{ flex: 1 }}
-        title={item.title}
-        icon={item.icon}
-        url={item.url}
-        nav={navigation}
-      />
-    </View>
-  );
+  
+
+  const URI = 'http://frostdev.ru/app/data.json';
+const getData = async () => {
+  try {
+    let response = await fetch(URI);
+    let json = await response.json();
+    return json;
+  } catch (error) {
+    console.error(error);
+  }
+};
+  const ListItem = ({item}) => {
+    return (
+      <View>
+      <View style={{ flex: 1 }}>
+          <Item
+            style={{ flex: 1 }}
+            title={item.title}
+            icon={item.icon}
+            url={item.url}
+            nav={navigation}
+          />
+        </View>
+      </View>
+    );
+  };
+
+
+  const [items, setItems] = React.useState([]);
+  getData().then(items => setItems(items));
+
+ 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar barStyle="light-content" backgroundColor="#121212" />
@@ -255,12 +224,11 @@ function HomeScreen({ navigation }) {
         />
         <Text style={[styles.white]}>Все телеканалы</Text>
         <View style={{ flex: 1 }}>
-          <FlatList
-            style={{ flex: 1 }}
-            data={DATA}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.key}
-          />
+        <FlatList
+        data={items}
+        keyExtractor={item => item.id.toString()}
+        renderItem={({item}) => <ListItem item={item} />}
+      />
         </View>
       </View>
     </SafeAreaView>
@@ -364,50 +332,6 @@ function VainahPage({ navigation }) {
 
 function FavoritePage({ navigation }) {
 
- 
-
-  const URI = '/data.js';
-
-const getData = async () => {
-  try {
-    let response = await fetch(URI);
-    let json = await response.json();
-    return json;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-  const ListItem = ({item}) => {
-
-    return (
-      <View>
-
-      <View style={{ flex: 1 }}>
-          <Item
-            style={{ flex: 1 }}
-            title={item.title}
-            icon={item.icon}
-            url={item.url}
-            nav={navigation}
-          />
-        </View>
-  
-        
-        <Text style={styles.white}>
-
-          {item.title},  {item.icon}  
-          
-  
-        </Text>
-
-      </View>
-    );
-  };
-
-
-  const [items, setItems] = React.useState([]);
-  getData().then(items => setItems(items));
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -417,11 +341,7 @@ const getData = async () => {
       <Button title="Go back" onPress={() => navigation.goBack()} />
 
 
-      <FlatList
-        data={items}
-        keyExtractor={item => item.id.toString()}
-        renderItem={({item}) => <ListItem item={item} />}
-      />
+      
  
     </View>
   );
