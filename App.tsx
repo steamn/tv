@@ -17,44 +17,23 @@ import {
   DefaultTheme,
   DarkTheme,
   useIsFocused,
- 
+
 } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather } from "@expo/vector-icons";
 import { Video } from "expo-av";
- 
+
 const GroznyStream =
   "https://edge2-tv-ll.facecast.io/evacoder_hls_hi/UUMLQVAYVlZyH14GRENQVV0G/2/720-3.m3u8";
 const PutStream = "http://dmitry-tv.my1.ru/his/02/CH_NATGEOHD.m3u8";
 const VainahStream =
   "https://live.chechensoft.ru/vainahtv/ngrp:vaynahtv_all/playlist.m3u8";
 
- 
-  // Путь https://live.chechensoft.ru/tvput/tvput/playlist.m3u8
 
-  
-const DATA = [
-  {
-    key: "1",
-    title: "ЧГТРК Грозный",
-    icon: require("./assets/images/grozny-icon.png"),
-    url: "Grozny",
-  },
-  {
-    key: "12",
-    title: "ЧГТРК Грозный 2",
-    icon: require("./assets/images/put-icon.png"),
-    url: "Grozny",
-  },
-  {
-    key: "3",
-    title: "ЧГТРК Грозный 2",
-    icon: require("./assets/images/vainah-icon.png"),
-    url: "Grozny",
-  },
-   
-];
+// Путь https://live.chechensoft.ru/tvput/tvput/playlist.m3u8
+
+
 
 const MyTheme = {
   dark: false,
@@ -67,7 +46,6 @@ const MyTheme = {
     notification: "rgb(255, 69, 58)",
   },
 };
-
 const Item = ({ title, icon, url, nav }) => (
   <View>
     <TouchableOpacity
@@ -78,7 +56,7 @@ const Item = ({ title, icon, url, nav }) => (
         }
       }}
     >
-      <Image style={styles.icon} source={{uri: icon}} />
+      <Image style={styles.icon} source={{ uri: icon }} />
       <View style={{ marginLeft: 10 }}>
         <Text style={[styles.grey, styles.fs12]}>{title}</Text>
         <Text
@@ -98,7 +76,6 @@ const Item = ({ title, icon, url, nav }) => (
     </TouchableOpacity>
   </View>
 );
-
 const Icons = ({ icon, url, nav }) => (
   <View>
     <TouchableOpacity
@@ -109,13 +86,11 @@ const Icons = ({ icon, url, nav }) => (
         }
       }}
     >
-      <Image style={styles.icon} source={icon} />
+      <Image style={styles.icon} source={{ uri: icon }} />
     </TouchableOpacity>
   </View>
 );
-
 const HomeStack = createStackNavigator();
-
 function HomeStackScreen() {
   return (
     <HomeStack.Navigator>
@@ -175,15 +150,7 @@ function MoreStackScreen() {
   );
 }
 
-
-
-
-
-function HomeScreen({ navigation }) {
-
-  
-
-  const URI = 'http://frostdev.ru/app/data.json';
+const URI = 'http://frostdev.ru/app/data.json';
 const getData = async () => {
   try {
     let response = await fetch(URI);
@@ -193,10 +160,13 @@ const getData = async () => {
     console.error(error);
   }
 };
-  const ListItem = ({item}) => {
+
+function HomeScreen({ navigation }) {
+
+  const ListItem = ({ item }) => {
     return (
       <View>
-      <View style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
           <Item
             style={{ flex: 1 }}
             title={item.title}
@@ -213,7 +183,7 @@ const getData = async () => {
   const [items, setItems] = React.useState([]);
   getData().then(items => setItems(items));
 
- 
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar barStyle="light-content" backgroundColor="#121212" />
@@ -224,111 +194,112 @@ const getData = async () => {
         />
         <Text style={[styles.white]}>Все телеканалы</Text>
         <View style={{ flex: 1 }}>
-        <FlatList
-        data={items}
-        keyExtractor={item => item.id.toString()}
-        renderItem={({item}) => <ListItem item={item} />}
-      />
+          <FlatList
+            data={items}
+            keyExtractor={(item) => item.key}
+            renderItem={ListItem}
+          />
         </View>
       </View>
     </SafeAreaView>
   );
 }
 
- 
 
 const Stream = (props) => {
   const isFocused = useIsFocused();
   return (
     <Video
-        source={{ uri: props.uri }}
-        rate={1.0}
-        volume={1.0}
-        isMuted={false}
-        resizeMode="contain"
-        useNativeControls={true}
-        shouldPlay={isFocused}
-        style={{ width: 360, height: 300 }}
-      />
+      source={{ uri: props.uri }}
+      rate={1.0}
+      volume={1.0}
+      isMuted={false}
+      resizeMode="contain"
+      useNativeControls={true}
+      shouldPlay={isFocused}
+      style={{ width: 360, height: 300 }}
+    />
   )
 }
 
-const IconsList = ({navigation}) => {
+const IconsList = ({ navigation }) => {
+
+  const [items, setItems] = React.useState([]);
+  getData().then(items => setItems(items));
+
+
   const renderIcon = ({ item }) => (
-    <View style={{ display: 'flex', borderTopColor: "#232323", borderTopWidth:2, marginTop: 10 }}>
+    <View style={{ display: 'flex', borderTopColor: "#232323", borderTopWidth: 2, marginTop: 10 }}>
       <View style={{ display: 'flex', alignSelf: "center" }}>
-      <Icons
-        icon={item.icon}
-        url={item.url}
-        nav={navigation}
-      />
+        <Icons
+          icon={item.icon}
+          url={item.url}
+          nav={navigation}
+        />
       </View>
     </View>
   );
   return (
-      <View>
-          <FlatList
-            horizontal
-            data={DATA}
-            renderItem={renderIcon}
-            keyExtractor={(item) => item.key}
-            style={styles.iconsHorList}
-          />
-      </View>
+    <View>
+      <FlatList
+        horizontal
+        data={items}
+        renderItem={renderIcon}
+        keyExtractor={(item) => item.key}
+        style={styles.iconsHorList}
+      />
+    </View>
   )
 }
 
 
 function GroznyPage({ navigation }) {
   return (
-    <View style={{ flex: 1,  alignItems: "center",   }}>
-      <View style={{  flex: 1 }}>
-         <View style={{ flex: 4, }}>
-         <Text>Detail Page</Text>
-         <Stream uri={GroznyStream}/>
-         </View>
-         <View style={{ flex: 1,  }}>
-           <IconsList navigation={navigation}/>
-         </View>
+    <View style={{ flex: 1, alignItems: "center", }}>
+      <View style={{ flex: 1 }}>
+        <View style={{ flex: 4, }}>
+          <Text>Detail Page</Text>
+          <Stream uri={GroznyStream} />
+        </View>
+        <View style={{ flex: 1, }}>
+          <IconsList navigation={navigation} />
+        </View>
       </View>
     </View>
   );
 }
 
-
-
-function PutPage({ navigation }) { 
+function PutPage({ navigation }) {
   return (
-    <View style={{ flex: 1,  alignItems: "center",   }}>
-    <View style={{  flex: 1 }}>
-       <View style={{ flex: 4, }}>
-       <Text>Detail Page</Text>
-       <Stream uri={PutStream}/>
-       </View>
-       <View style={{ flex: 1,  }}>
-         <IconsList navigation={navigation}/>
-       </View>
+    <View style={{ flex: 1, alignItems: "center", }}>
+      <View style={{ flex: 1 }}>
+        <View style={{ flex: 4, }}>
+          <Text>Detail Page</Text>
+          <Stream uri={PutStream} />
+        </View>
+        <View style={{ flex: 1, }}>
+          <IconsList navigation={navigation} />
+        </View>
+      </View>
     </View>
-  </View>
-   
+
   );
 }
 function VainahPage({ navigation }) {
   return (
-    <View style={{ flex: 1,  alignItems: "center",   }}>
-      <View style={{  flex: 1 }}>
-         <View style={{ flex: 4, }}>
-         <Text>Detail Page</Text>
-         <Stream uri={VainahStream}/>
-         </View>
-         <View style={{ flex: 1,  }}>
-           <IconsList navigation={navigation}/>
-         </View>
+    <View style={{ flex: 1, alignItems: "center", }}>
+      <View style={{ flex: 1 }}>
+        <View style={{ flex: 4, }}>
+          <Text>Detail Page</Text>
+          <Stream uri={VainahStream} />
+        </View>
+        <View style={{ flex: 1, }}>
+          <IconsList navigation={navigation} />
+        </View>
       </View>
     </View>
   );
 }
- 
 
 function FavoritePage({ navigation }) {
 
@@ -341,8 +312,8 @@ function FavoritePage({ navigation }) {
       <Button title="Go back" onPress={() => navigation.goBack()} />
 
 
-      
- 
+
+
     </View>
   );
 }
