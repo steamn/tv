@@ -46,50 +46,7 @@ const MyTheme = {
     notification: "rgb(255, 69, 58)",
   },
 };
-const Item = ({ title, icon, url, nav }) => (
-  <View>
-    <TouchableOpacity
-      style={styles.item}
-      onPress={() => {
-        {
-          nav.navigate(url);
-        }
-      }}
-    >
-      <Image style={styles.icon} source={{ uri: icon }} />
-      <View style={{ marginLeft: 10 }}>
-        <Text style={[styles.grey, styles.fs12]}>{title}</Text>
-        <Text
-          style={{
-            fontSize: 16,
-            color: "#fff",
-            borderBottomColor: "#A97D3A",
-            borderBottomWidth: 2,
-          }}
-        >
-          Новости - Информационная программа{" "}
-        </Text>
-        <Text style={[styles.grey, styles.fs12]}>
-          17:40 | Семейные ценности (образцовая се...
-        </Text>
-      </View>
-    </TouchableOpacity>
-  </View>
-);
-const Icons = ({ icon, url, nav }) => (
-  <View>
-    <TouchableOpacity
-      style={styles.item}
-      onPress={() => {
-        {
-          nav.navigate(url);
-        }
-      }}
-    >
-      <Image style={styles.icon} source={{ uri: icon }} />
-    </TouchableOpacity>
-  </View>
-);
+
 const HomeStack = createStackNavigator();
 function HomeStackScreen() {
   return (
@@ -112,8 +69,16 @@ function HomeStackScreen() {
       <HomeStack.Screen
         name="Grozny"
         component={GroznyPage}
-        options={{ title: "ЧГТРК Грозный" }}
-      />
+        options={{ title: "ЧГТРК Грозный",
+          headerStyle: {
+            backgroundColor: "#232323",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+        }} 
+        />
       <HomeStack.Screen
         name="Put"
         component={PutPage}
@@ -150,40 +115,7 @@ function MoreStackScreen() {
   );
 }
 
-const URI = 'http://frostdev.ru/app/data.json';
-const getData = async () => {
-  try {
-    let response = await fetch(URI);
-    let json = await response.json();
-    return json;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 function HomeScreen({ navigation }) {
-
-  const ListItem = ({ item }) => {
-    return (
-      <View>
-        <View style={{ flex: 1 }}>
-          <Item
-            style={{ flex: 1 }}
-            title={item.title}
-            icon={item.icon}
-            url={item.url}
-            nav={navigation}
-          />
-        </View>
-      </View>
-    );
-  };
-
-
-  const [items, setItems] = React.useState([]);
-  getData().then(items => setItems(items));
-
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar barStyle="light-content" backgroundColor="#121212" />
@@ -193,18 +125,14 @@ function HomeScreen({ navigation }) {
           source={require("./assets/images/banner.png")}
         />
         <Text style={[styles.white]}>Все телеканалы</Text>
+
         <View style={{ flex: 1 }}>
-          <FlatList
-            data={items}
-            keyExtractor={(item) => item.key}
-            renderItem={ListItem}
-          />
+          <AllChannels nav={navigation} />
         </View>
       </View>
     </SafeAreaView>
   );
 }
-
 
 const Stream = (props) => {
   const isFocused = useIsFocused();
@@ -222,36 +150,64 @@ const Stream = (props) => {
   )
 }
 
-const IconsList = ({ navigation }) => {
+export class IconsRow extends React.Component {
 
-  const [items, setItems] = React.useState([]);
-  getData().then(items => setItems(items));
+  constructor(props) {
+    super(props);
+    this.state = { isLoading: true }
+  }
+  componentDidMount() {
+    return fetch('http://frostdev.ru/app/data2.json')
+      .then((response) => response.json())
+      .then((responseJson) => {
 
+        this.setState({
+          isLoading: false,
+          dataSource: responseJson.data,
+        }, function () {
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  render() {
 
-  const renderIcon = ({ item }) => (
-    <View style={{ display: 'flex', borderTopColor: "#232323", borderTopWidth: 2, marginTop: 10 }}>
-      <View style={{ display: 'flex', alignSelf: "center" }}>
-        <Icons
-          icon={item.icon}
-          url={item.url}
-          nav={navigation}
+    if (this.state.isLoading) {
+      return (
+        <View style={{ flex: 1, padding: 20 }}>
+          <ActivityIndicator />
+        </View>
+      )
+    }
+    return (
+        <FlatList
+          horizontal
+          data={this.state.dataSource}
+          renderItem={({ item }) =>
+              <View style={{ display: 'flex', borderTopColor: "#232323", borderTopWidth: 2, marginTop: 10 }}>
+                <View style={{ display: 'flex', alignSelf: "center" }}>
+                  <View>
+                    <TouchableOpacity
+                      style={styles.item}
+                      onPress={() => {
+                        {
+                          this.props.nav.navigate(item.url);
+                        }
+                      }}
+                    >
+                      <Image style={styles.icon} source={{ uri: item.icon }} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+          }
+          keyExtractor={({ id }, index) => id}
+          style={styles.iconsHorList}
         />
-      </View>
-    </View>
-  );
-  return (
-    <View>
-      <FlatList
-        horizontal
-        data={items}
-        renderItem={renderIcon}
-        keyExtractor={(item) => item.key}
-        style={styles.iconsHorList}
-      />
-    </View>
-  )
+    );
+  }
 }
-
 
 function GroznyPage({ navigation }) {
   return (
@@ -262,7 +218,7 @@ function GroznyPage({ navigation }) {
           <Stream uri={GroznyStream} />
         </View>
         <View style={{ flex: 1, }}>
-          <IconsList navigation={navigation} />
+          <IconsRow nav={navigation} />
         </View>
       </View>
     </View>
@@ -278,7 +234,7 @@ function PutPage({ navigation }) {
           <Stream uri={PutStream} />
         </View>
         <View style={{ flex: 1, }}>
-          <IconsList navigation={navigation} />
+          <IconsRow nav={navigation} />
         </View>
       </View>
     </View>
@@ -294,15 +250,87 @@ function VainahPage({ navigation }) {
           <Stream uri={VainahStream} />
         </View>
         <View style={{ flex: 1, }}>
-          <IconsList navigation={navigation} />
+          <IconsRow nav={navigation} />
         </View>
       </View>
     </View>
   );
 }
 
-function FavoritePage({ navigation }) {
+export class AllChannels extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = { isLoading: true }
+  }
+
+  componentDidMount() {
+    return fetch('http://frostdev.ru/app/data2.json')
+      .then((response) => response.json())
+      .then((responseJson) => {
+
+        this.setState({
+          isLoading: false,
+          dataSource: responseJson.data,
+        }, function () {
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+  render() {
+
+    if (this.state.isLoading) {
+      return (
+        <View style={{ flex: 1, padding: 20 }}>
+          <ActivityIndicator />
+        </View>
+      )
+    }
+    return (
+      <View style={{ flex: 1, paddingTop: 20, }}>
+        <FlatList
+          data={this.state.dataSource}
+          renderItem={({ item }) =>
+            <View>
+              <TouchableOpacity
+                style={styles.item}
+                onPress={() => {
+                  {
+                    this.props.nav.navigate(item.url);
+                  }
+                }}
+              >
+                <Image style={styles.icon} source={{ uri: item.icon }} />
+                <View style={{ marginLeft: 10 }}>
+                  <Text style={[styles.grey, styles.fs12]}>{item.title}</Text>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      color: "#fff",
+                      borderBottomColor: "#A97D3A",
+                      borderBottomWidth: 2,
+                    }}
+                  >
+                    Новости - Информационная программа
+                  </Text>
+                  <Text style={[styles.grey, styles.fs12]}>
+                    17:40 | Семейные ценности (образцовая се...
+</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          }
+          keyExtractor={({ id }, index) => id}
+           
+        />
+      </View>
+    );
+  }
+}
+
+function FavoritePage({ navigation }) {
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -310,13 +338,37 @@ function FavoritePage({ navigation }) {
       <Text style={[styles.white]}></Text>
       <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
       <Button title="Go back" onPress={() => navigation.goBack()} />
-
-
-
-
     </View>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function MorePage({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
