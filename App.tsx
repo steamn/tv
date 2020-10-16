@@ -24,6 +24,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather } from "@expo/vector-icons";
 import { Video } from "expo-av";
 
+import FavText from "./screens/FavText";
+
 const GroznyStream =
   "https://edge2-tv-ll.facecast.io/evacoder_hls_hi/UUMLQVAYVlZyH14GRENQVV0G/2/720-3.m3u8";
 const PutStream = "http://dmitry-tv.my1.ru/his/02/CH_NATGEOHD.m3u8";
@@ -32,9 +34,8 @@ const VainahStream =
 
 
 // Путь https://live.chechensoft.ru/tvput/tvput/playlist.m3u8
-
-
-
+ 
+ 
 const MyTheme = {
   dark: false,
   colors: {
@@ -46,6 +47,9 @@ const MyTheme = {
     notification: "rgb(255, 69, 58)",
   },
 };
+
+
+
 
 const HomeStack = createStackNavigator();
 function HomeStackScreen() {
@@ -65,7 +69,7 @@ function HomeStackScreen() {
           },
         }}
       />
-
+       
       <HomeStack.Screen
         name="Grozny"
         component={GroznyPage}
@@ -125,6 +129,7 @@ function HomeScreen({ navigation }) {
           source={require("./assets/images/banner.png")}
         />
         <Text style={[styles.white]}>Все телеканалы</Text>
+    
 
         <View style={{ flex: 1 }}>
           <AllChannels nav={navigation} />
@@ -336,35 +341,13 @@ function FavoritePage({ navigation }) {
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text style={[styles.white]}>Favorite Page11211 </Text>
       <Text style={[styles.white]}></Text>
+      <FavText style={[styles.white]} />
       <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
       <Button title="Go back" onPress={() => navigation.goBack()} />
+      
     </View>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
