@@ -24,17 +24,11 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather } from "@expo/vector-icons";
 import { Video } from "expo-av";
 
-import FavText from "./screens/FavText";
+import AllChannels from './src/components/AllChannels'
+import IconsRow from './src/components/IconsRow'
+import {mainStyles} from './src/styles/style'
+import {Streams} from './src/streams'
 
-const GroznyStream =
-  "https://edge2-tv-ll.facecast.io/evacoder_hls_hi/UUMLQVAYVlZyH14GRENQVV0G/2/720-3.m3u8";
-const PutStream = "http://dmitry-tv.my1.ru/his/02/CH_NATGEOHD.m3u8";
-const VainahStream =
-  "https://live.chechensoft.ru/vainahtv/ngrp:vaynahtv_all/playlist.m3u8";
-
-
-// Путь https://live.chechensoft.ru/tvput/tvput/playlist.m3u8
- 
  
 const MyTheme = {
   dark: false,
@@ -47,9 +41,6 @@ const MyTheme = {
     notification: "rgb(255, 69, 58)",
   },
 };
-
-
-
 
 const HomeStack = createStackNavigator();
 function HomeStackScreen() {
@@ -125,12 +116,10 @@ function HomeScreen({ navigation }) {
       <StatusBar barStyle="light-content" backgroundColor="#121212" />
       <View style={{ flex: 1 }}>
         <Image
-          style={styles.banner}
+          style={mainStyles.banner}
           source={require("./assets/images/banner.png")}
         />
-        <Text style={[styles.white]}>Все телеканалы</Text>
-    
-
+        <Text style={mainStyles.textWhite}>Все телеканалы</Text>
         <View style={{ flex: 1 }}>
           <AllChannels nav={navigation} />
         </View>
@@ -155,72 +144,14 @@ const Stream = (props) => {
   )
 }
 
-export class IconsRow extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = { isLoading: true }
-  }
-  componentDidMount() {
-    return fetch('http://frostdev.ru/app/data2.json')
-      .then((response) => response.json())
-      .then((responseJson) => {
-
-        this.setState({
-          isLoading: false,
-          dataSource: responseJson.data,
-        }, function () {
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-  render() {
-
-    if (this.state.isLoading) {
-      return (
-        <View style={{ flex: 1, padding: 20 }}>
-          <ActivityIndicator />
-        </View>
-      )
-    }
-    return (
-        <FlatList
-          horizontal
-          data={this.state.dataSource}
-          renderItem={({ item }) =>
-              <View style={{ display: 'flex', borderTopColor: "#232323", borderTopWidth: 2, marginTop: 10 }}>
-                <View style={{ display: 'flex', alignSelf: "center" }}>
-                  <View>
-                    <TouchableOpacity
-                      style={styles.item}
-                      onPress={() => {
-                        {
-                          this.props.nav.navigate(item.url);
-                        }
-                      }}
-                    >
-                      <Image style={styles.icon} source={{ uri: item.icon }} />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
-          }
-          keyExtractor={({ id }, index) => id}
-          style={styles.iconsHorList}
-        />
-    );
-  }
-}
-
+ 
 function GroznyPage({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: "center", }}>
       <View style={{ flex: 1 }}>
         <View style={{ flex: 4, }}>
           <Text>Detail Page</Text>
-          <Stream uri={GroznyStream} />
+          <Stream uri={Streams.GroznyStream} />
         </View>
         <View style={{ flex: 1, }}>
           <IconsRow nav={navigation} />
@@ -236,7 +167,7 @@ function PutPage({ navigation }) {
       <View style={{ flex: 1 }}>
         <View style={{ flex: 4, }}>
           <Text>Detail Page</Text>
-          <Stream uri={PutStream} />
+          <Stream uri={Streams.PutStream} />
         </View>
         <View style={{ flex: 1, }}>
           <IconsRow nav={navigation} />
@@ -252,7 +183,7 @@ function VainahPage({ navigation }) {
       <View style={{ flex: 1 }}>
         <View style={{ flex: 4, }}>
           <Text>Detail Page</Text>
-          <Stream uri={VainahStream} />
+          <Stream uri={Streams.VainahStream} />
         </View>
         <View style={{ flex: 1, }}>
           <IconsRow nav={navigation} />
@@ -262,86 +193,14 @@ function VainahPage({ navigation }) {
   );
 }
 
-export class AllChannels extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = { isLoading: true }
-  }
-
-  componentDidMount() {
-    return fetch('http://frostdev.ru/app/data2.json')
-      .then((response) => response.json())
-      .then((responseJson) => {
-
-        this.setState({
-          isLoading: false,
-          dataSource: responseJson.data,
-        }, function () {
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-  render() {
-
-    if (this.state.isLoading) {
-      return (
-        <View style={{ flex: 1, padding: 20 }}>
-          <ActivityIndicator />
-        </View>
-      )
-    }
-    return (
-      <View style={{ flex: 1, paddingTop: 20, }}>
-        <FlatList
-          data={this.state.dataSource}
-          renderItem={({ item }) =>
-            <View>
-              <TouchableOpacity
-                style={styles.item}
-                onPress={() => {
-                  {
-                    this.props.nav.navigate(item.url);
-                  }
-                }}
-              >
-                <Image style={styles.icon} source={{ uri: item.icon }} />
-                <View style={{ marginLeft: 10 }}>
-                  <Text style={[styles.grey, styles.fs12]}>{item.title}</Text>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      color: "#fff",
-                      borderBottomColor: "#A97D3A",
-                      borderBottomWidth: 2,
-                    }}
-                  >
-                    Новости - Информационная программа
-                  </Text>
-                  <Text style={[styles.grey, styles.fs12]}>
-                    17:40 | Семейные ценности (образцовая се...
-</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          }
-          keyExtractor={({ id }, index) => id}
-           
-        />
-      </View>
-    );
-  }
-}
+ 
 
 function FavoritePage({ navigation }) {
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text style={[styles.white]}>Favorite Page11211 </Text>
-      <Text style={[styles.white]}></Text>
-      <FavText style={[styles.white]} />
+      <Text style={mainStyles.textWhite}>Favorite Page11211 </Text>
+      <Text style={[mainStyles.white]}></Text>
       <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
       <Button title="Go back" onPress={() => navigation.goBack()} />
       
@@ -402,54 +261,5 @@ function App() {
   );
 }
 
-const styles = StyleSheet.create({
-  test: {
-    display: "flex",
-  },
-  iconsHorList: {
-    width: 360,
-    height: 100,
-  },
-  container: {
-    alignItems: "center",
-    paddingTop: 25,
-  },
-  center: {
-    alignItems: "center",
-  },
-  white: {
-    color: "#fff",
-  },
-  grey: {
-    color: "#828282",
-  },
-  fs12: {
-    fontSize: 14,
-  },
-  banner: {
-    width: "100%",
-    marginBottom: 40,
-  },
-  ItemContainer: {
-    marginLeft: 0,
-    width: "90%",
-  },
-  icon: {
-    width: 64,
-    height: 64,
-  },
-  list: {
-    display: "flex",
-  },
-  item: {
-    padding: 10,
-    marginVertical: 4,
-    display: "flex",
-    flexDirection: "row",
-  },
-  title: {
-    fontSize: 22,
-  },
-});
-
+ 
 export default App;

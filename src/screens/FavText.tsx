@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 
 import {
  
@@ -6,7 +6,7 @@ import {
  
   } from "react-native";
 
- const FavText = ()  => {
+  export default function FavText() {
 
     return (
       <Text style={{color: "#fff"}}>
@@ -14,4 +14,4 @@ import {
       </Text>
     );
   }
-  export default FavText;
+ 
