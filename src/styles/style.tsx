@@ -54,6 +54,17 @@ export const mainStyles =  StyleSheet.create({
       title: {
         fontSize: 22,
       },
+      darkBg: {
+        backgroundColor: "#232323",
+      },
+      headerTitleStyle: {
+        fontWeight: "bold",
+      },
+      headerTintColor: {
+        color: "#fff", 
+      }
+
+
  
 })
 
