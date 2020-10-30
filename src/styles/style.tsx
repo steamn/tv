@@ -1,7 +1,7 @@
-import {StyleSheet} from 'react-native'
+import {StyleSheet, Dimensions} from 'react-native'
 
 import {colors} from './base'
-
+const windowWidth = Dimensions.get('window').width - 40;
 export const mainStyles =  StyleSheet.create({
 
     textWhite: {
@@ -11,7 +11,7 @@ export const mainStyles =  StyleSheet.create({
         display: "flex",
       },
       iconsHorList: {
-        width: 360,
+        width: windowWidth,
         height: 100,
       },
       container: {

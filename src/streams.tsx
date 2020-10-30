@@ -21,10 +21,9 @@ export const Streams = {
     friday:"https://zabava-htlive.cdn.ngenix.net/hls/CH_PYATNIZZA/variant.m3u8",
     kanal5:"https://zabava-htlive.cdn.ngenix.net/hls/CH_5TV/variant.m3u8",
     tv3:"https://zabava-htlive.cdn.ngenix.net/hls/CH_TV3/variant.m3u8",
-    ntv:"https://zabava-htlive.cdn.ngenix.net/hls/CH_NTV/variant.m3u8 ",
-    sts:"https://zabava-htlive.cdn.ngenix.net/hls/CH_STS/variant.m3u8 ",
+    ntv:"https://zabava-htlive.cdn.ngenix.net/hls/CH_NTV/variant.m3u8",
+    sts:"https://zabava-htlive.cdn.ngenix.net/hls/CH_STS/variant.m3u8",
 
- 
 }
  
 

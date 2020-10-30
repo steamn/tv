@@ -7,11 +7,9 @@ import {
     TouchableOpacity, 
     Image,
  } from 'react-native'
-
 import {mainStyles} from '../styles/style'
  
 export default class IconsRow extends React.Component {
-
     constructor(props) {
       super(props);
       this.state = { isLoading: true }
@@ -32,10 +30,9 @@ export default class IconsRow extends React.Component {
         });
     }
     render() {
-  
       if (this.state.isLoading) {
         return (
-          <View style={{ flex: 1, padding: 20 }}>
+          <View style={{ flex: 1, padding: 20,}}>
             <ActivityIndicator />
           </View>
         )
@@ -45,21 +42,10 @@ export default class IconsRow extends React.Component {
             horizontal
             data={this.state.dataSource}
             renderItem={({ item }) =>
-                <View style={{ display: 'flex', borderTopColor: "#232323", borderTopWidth: 2, marginTop: 10 }}>
-                  <View style={{ display: 'flex', alignSelf: "center" }}>
-                    <View>
-                      <TouchableOpacity
-                        style={mainStyles.item}
-                        onPress={() => {
-                          {
-                            this.props.nav.navigate(item.url);
-                          }
-                        }}
-                      >
+                <View style={{ borderTopColor: "#232323", borderTopWidth: 5, marginTop: 10}}>
+                      <TouchableOpacity style={mainStyles.item} onPress={() => {{this.props.nav.navigate(item.url);}} }>
                         <Image style={mainStyles.icon} source={{ uri: item.icon }} />
                       </TouchableOpacity>
-                    </View>
-                  </View>
                 </View>
             }
             keyExtractor={({ id }, index) => id}

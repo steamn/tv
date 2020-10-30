@@ -10,6 +10,7 @@ import {
   StatusBar,
   TouchableOpacity,
   ActivityIndicator,
+  Dimensions,
 } from "react-native";
 import {
   NavigationContainer,
@@ -23,13 +24,12 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather } from "@expo/vector-icons";
 import { Video } from "expo-av";
-
-import AllChannels from './src/components/AllChannels'
-import IconsRow from './src/components/IconsRow'
-import {mainStyles} from './src/styles/style'
-import {Streams} from './src/streams'
-
- 
+import AllChannels from './src/components/AllChannels';
+import IconsRow from './src/components/IconsRow';
+import {mainStyles} from './src/styles/style';
+import {Streams} from './src/streams';
+import {StreamUrl} from "./src/routes/homeStack";
+const windowWidth = Dimensions.get('window').width;
 const MyTheme = {
   dark: false,
   colors: {
@@ -40,12 +40,13 @@ const MyTheme = {
     border: "rgb(199, 199, 204)",
     notification: "rgb(255, 69, 58)",
   },
-};
+}; 
 
 
 
 const HomeStack = createStackNavigator();
 function HomeStackScreen() {
+
   return (
     <HomeStack.Navigator
     headerMode="screen"
@@ -54,6 +55,7 @@ function HomeStackScreen() {
       headerTintColor: "#fff" ,
       headerTitleStyle: mainStyles.headerTitleStyle,
     }}>
+
       
       <HomeStack.Screen
         name="Home"
@@ -239,7 +241,7 @@ const Stream = (props) => {
       resizeMode="contain"
       useNativeControls={true}
       shouldPlay={isFocused}
-      style={{ width: 360, height: 300 }}
+      style={{ width: windowWidth, height: 300 }}
     />
   )
 }
@@ -251,7 +253,7 @@ function GroznyPage({ navigation }) {
         <View style={{ flex: 4 }}>
           <Stream uri={Streams.GroznyStream} />
         </View>
-        <View style={{ flex: 1, }}>
+        <View style={{ flex: 1}}>
           <IconsRow nav={navigation} />
         </View>
       </View>
@@ -417,7 +419,7 @@ function ufc({ navigation }) {
 }
 function match({ navigation }) {
   return (
-    <View style={{ flex: 1, alignItems: "center", }}>
+    <View style={{ flex: 1, alignItems: "center",}}>
       <View style={{ flex: 1 }}>
         <View style={{ flex: 4, }}>
           <Stream uri={Streams.match} />
@@ -573,9 +575,10 @@ function sts({ navigation }) {
 
 function FavoritePage({ navigation }) {
 
+
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text style={mainStyles.textWhite}>Favorite Page11211 </Text>
+      <Text style={mainStyles.textWhite}>Favorite Page122 {console.log(StreamUrl.movies[0])}</Text>
       <Text style={[mainStyles.white]}></Text>
       <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
       <Button title="Go back" onPress={() => navigation.goBack()} />
