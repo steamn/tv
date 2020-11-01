@@ -28,7 +28,8 @@ import AllChannels from './src/components/AllChannels';
 import IconsRow from './src/components/IconsRow';
 import {mainStyles} from './src/styles/style';
 import {Streams} from './src/streams';
-import {StreamUrl} from "./src/routes/homeStack";
+
+
 const windowWidth = Dimensions.get('window').width;
 const MyTheme = {
   dark: false,
@@ -578,8 +579,9 @@ function FavoritePage({ navigation }) {
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text style={mainStyles.textWhite}>Favorite Page122 {console.log(StreamUrl.movies[0])}</Text>
-      <Text style={[mainStyles.white]}></Text>
+      <Text style={mainStyles.textWhite}>Favorite Page122 </Text>
+      <Text style={[mainStyles.white]}>
+      </Text>
       <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
       <Button title="Go back" onPress={() => navigation.goBack()} />
     </View>
@@ -593,6 +595,11 @@ function MorePage({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text>More Page</Text>
+
+      
+
+
+
 
       <Button title="Go to Home" onPress={() => navigation.navigate("Home")} />
       <Button title="Go back" onPress={() => navigation.goBack()} />
