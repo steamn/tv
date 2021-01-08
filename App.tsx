@@ -48,7 +48,7 @@ const MyTheme = {
 
 const HomeStack = createStackNavigator();
 function HomeStackScreen() {
-  const [data, setData] = useState(null)
+  const [data, setData] = useState<any[]>([])
 
 
   const getData=()=>{
@@ -91,6 +91,7 @@ function HomeStackScreen() {
       />
       {data && data.map(item => {
         return  <HomeStack.Screen
+            key={item.id}
             name={item.url}
             component={TranslationPage}
             initialParams={{ item: item }}
@@ -100,8 +101,8 @@ function HomeStackScreen() {
     </HomeStack.Navigator>
   );
 }
-const  TranslationPage = ({navigation , route}) =>  {
-  
+const  TranslationPage = ({navigation, route}: {navigation: any, route: any } ) =>  {
+
   const item =  route.params.item
   return (
       <View style={{ flex: 1, alignItems: "center", }}>
@@ -152,7 +153,7 @@ function MoreStackScreen() {
   );
 }
 
-function HomeScreen({ navigation }) {
+function HomeScreen({navigation}: {navigation: any}) {
   console.log(navigation)
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -171,7 +172,7 @@ function HomeScreen({ navigation }) {
   );
 }
 
-export  const Stream = (props) => {
+export  const Stream = ({props}: {props: any}) => {
   const isFocused = useIsFocused();
   return (
     <Video
@@ -187,7 +188,7 @@ export  const Stream = (props) => {
   )
 }
 
-function FavoritePage({ navigation }) {
+function FavoritePage({navigation}: {navigation: any}) {
 
 
   return (
@@ -204,7 +205,7 @@ function FavoritePage({ navigation }) {
 
 
 
-function MorePage({ navigation }) {
+function MorePage({navigation}: {navigation: any}) {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text>More Page</Text>
