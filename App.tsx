@@ -29,7 +29,7 @@ import IconsRow from './src/components/IconsRow';
 import {mainStyles} from './src/styles/style';
 import {Streams} from './src/streams';
 import {useEffect, useState} from "react";
-
+import { parse } from 'fast-xml-parser';
 
 const windowWidth = Dimensions.get('window').width;
 const MyTheme = {
@@ -49,6 +49,7 @@ const MyTheme = {
 const HomeStack = createStackNavigator();
 function HomeStackScreen() {
   const [data, setData] = useState<any[]>([])
+  const [programsData, setProgramsData] = useState<any[]>([])
 
 
   const getData=()=>{
@@ -66,10 +67,25 @@ function HomeStackScreen() {
           setData(responseData.data)
         });
   }
+    const getPrograms =()=>{
+      console.log('hello')
+        fetch('http://frostdev.ru/app/tvguide.xml')
+            .then(function(response){
+                return response.text();
+            })
+            .then(function(responseData) {
+                let obj = parse(responseData);
+                console.log(obj.tv.programme, 'programs')
 
+            })
+            .catch((error) => {
+                console.log(error, 'programs error');
+            });
+
+    }
   useEffect(() => {
     getData()
-    console.log(data, 'data')
+      getPrograms()
   }, [])
 
 
@@ -104,6 +120,7 @@ function HomeStackScreen() {
 const  TranslationPage = ({navigation, route}: {navigation: any, route: any } ) =>  {
 
   const item =  route.params.item
+
   return (
       <View style={{ flex: 1, alignItems: "center", }}>
         <View style={{ flex: 1 }}>
@@ -116,6 +133,21 @@ const  TranslationPage = ({navigation, route}: {navigation: any, route: any } ) 
         </View>
       </View>
   );
+}
+export  const Stream = (props) => {
+    const isFocused = useIsFocused();
+    return (
+        <Video
+            source={{ uri: props.uri }}
+            rate={1.0}
+            volume={1.0}
+            isMuted={false}
+            resizeMode="contain"
+            useNativeControls={true}
+            shouldPlay={isFocused}
+            style={{ width: windowWidth, height: 300 }}
+        />
+    )
 }
 function FavStackScreen() {
   return (
@@ -154,7 +186,7 @@ function MoreStackScreen() {
 }
 
 function HomeScreen({navigation}: {navigation: any}) {
-  console.log(navigation)
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar barStyle="light-content" backgroundColor="#121212" />
@@ -172,21 +204,7 @@ function HomeScreen({navigation}: {navigation: any}) {
   );
 }
 
-export  const Stream = ({props}: {props: any}) => {
-  const isFocused = useIsFocused();
-  return (
-    <Video
-      source={{ uri: props.uri }}
-      rate={1.0}
-      volume={1.0}
-      isMuted={false}
-      resizeMode="contain"
-      useNativeControls={true}
-      shouldPlay={isFocused}
-      style={{ width: windowWidth, height: 300 }}
-    />
-  )
-}
+
 
 function FavoritePage({navigation}: {navigation: any}) {
 
