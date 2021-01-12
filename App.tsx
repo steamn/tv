@@ -85,7 +85,7 @@ function HomeStackScreen() {
     }
   useEffect(() => {
     getData()
-      getPrograms()
+     // getPrograms()
   }, [])
 
 
